@@ -14,7 +14,90 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          address: string
+          area_size: number
+          city: string
+          created_at: string
+          crop_type: string
+          farmer_name: string
+          id: string
+          phone: string
+          pincode: string
+          preferred_date: string
+          preferred_time: string
+          special_instructions: string | null
+          state: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address: string
+          area_size: number
+          city: string
+          created_at?: string
+          crop_type: string
+          farmer_name: string
+          id?: string
+          phone: string
+          pincode: string
+          preferred_date: string
+          preferred_time: string
+          special_instructions?: string | null
+          state: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string
+          area_size?: number
+          city?: string
+          created_at?: string
+          crop_type?: string
+          farmer_name?: string
+          id?: string
+          phone?: string
+          pincode?: string
+          preferred_date?: string
+          preferred_time?: string
+          special_instructions?: string | null
+          state?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      crops: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          spraying_requirements: string | null
+          suitable_season: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          spraying_requirements?: string | null
+          suitable_season?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          spraying_requirements?: string | null
+          suitable_season?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

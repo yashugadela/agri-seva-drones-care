@@ -10,6 +10,7 @@ import DroneDetails from "./pages/DroneDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Booking from "./pages/Booking";
+import BookingHistory from "./pages/BookingHistory";
 import Confirmation from "./pages/Confirmation";
 import NotFound from "./pages/NotFound";
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/booking-history" element={<BookingHistory />} />
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

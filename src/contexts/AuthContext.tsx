@@ -12,7 +12,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, phone: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -83,9 +83,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('agri-drone-user');
+  const logout = async () => {
+    try {
+      // If using Supabase auth in future, call supabase.auth.signOut()
+      setUser(null);
+      localStorage.removeItem('agri-drone-user');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const value = {

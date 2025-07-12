@@ -3,11 +3,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Plane, Leaf, Clock, Shield, Users, ArrowRight } from 'lucide-react';
+import { Bug, Leaf, Clock, Shield, Users, ArrowRight, LogOut, History } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50">
@@ -15,18 +19,33 @@ const Index = () => {
       <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-green-100">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Plane className="h-8 w-8 text-green-600" />
+            <Bug className="h-8 w-8 text-green-600" />
             <h1 className="text-2xl font-bold text-green-800">AgriDrone Seva</h1>
           </div>
           <nav className="flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
-                <span className="text-green-700">Welcome, {user.name}</span>
+                <span className="text-green-700 font-medium">Welcome, {user.name}</span>
+                <Link to="/booking-history">
+                  <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                    <History className="w-4 h-4 mr-2" />
+                    My Bookings
+                  </Button>
+                </Link>
                 <Link to="/booking">
                   <Button className="bg-green-600 hover:bg-green-700 text-white">
+                    <Bug className="w-4 h-4 mr-2" />
                     Book Service
                   </Button>
                 </Link>
+                <Button 
+                  variant="outline" 
+                  onClick={handleLogout}
+                  className="border-red-600 text-red-600 hover:bg-red-50"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
               </div>
             ) : (
               <div className="flex gap-2">
@@ -58,7 +77,7 @@ const Index = () => {
               A Smart Solution for Modern Farming
             </h3>
             <p className="text-xl text-green-600 mb-8 leading-relaxed">
-              Advanced drone technology for precise pesticide and fertilizer spraying. 
+              Advanced drone technology for precise pesticide and fertilizer spraying including paddy crops. 
               Save time, reduce costs, and boost your crop yields with our professional agricultural drone services.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -151,7 +170,7 @@ const Index = () => {
       <footer className="bg-green-800 text-white py-8 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Plane className="h-6 w-6" />
+            <Bug className="h-6 w-6" />
             <span className="text-xl font-semibold">AgriDrone Seva</span>
           </div>
           <p className="text-green-200 mb-2">Smart Spraying for Smarter Farmers</p>
