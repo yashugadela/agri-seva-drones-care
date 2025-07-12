@@ -16,6 +16,7 @@ import {
   Users
 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import droneMainImage from '@/assets/drone-main.png';
 
 const DroneDetails = () => {
   const { user } = useAuth();
@@ -102,14 +103,14 @@ const DroneDetails = () => {
             <Card className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="aspect-video bg-gradient-to-br from-green-200 to-green-400 flex items-center justify-center">
                 <img 
-                  src="https://images.unsplash.com/photo-1487887235947-a955ef187fcc?w=400&h=300&fit=crop"
-                  alt="Drone in flight"
+                  src={droneMainImage}
+                  alt="Agricultural Drone"
                   className="w-full h-full object-cover"
                 />
               </div>
               <CardContent className="p-4">
-                <h3 className="font-semibold text-green-800">Drone in Action</h3>
-                <p className="text-sm text-green-600">Professional spraying in progress</p>
+                <h3 className="font-semibold text-green-800">Our Agricultural Drone</h3>
+                <p className="text-sm text-green-600">Advanced spraying technology</p>
               </CardContent>
             </Card>
 
