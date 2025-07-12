@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Drone, Calendar, MapPin, Phone, Mail, Home } from 'lucide-react';
+import { CheckCircle, Plane, Calendar, MapPin, Phone, Mail, Home } from 'lucide-react';
 
 interface BookingData {
   district: string;
@@ -35,7 +35,7 @@ const Confirmation = () => {
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 flex items-center justify-center p-4">
         <Card className="max-w-md mx-auto text-center">
           <CardContent className="p-8">
-            <Drone className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <Plane className="h-16 w-16 text-green-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-green-800 mb-4">No Booking Found</h2>
             <p className="text-green-600 mb-6">Please complete the booking process first</p>
             <Link to="/booking">
@@ -72,7 +72,7 @@ const Confirmation = () => {
         <Card className="bg-white/90 backdrop-blur-sm shadow-xl border-green-200 mb-6">
           <CardHeader>
             <CardTitle className="text-2xl text-green-800 flex items-center gap-2">
-              <Drone className="h-6 w-6" />
+              <Plane className="h-6 w-6" />
               Booking Details / బుకింగ్ వివరాలు
             </CardTitle>
           </CardHeader>

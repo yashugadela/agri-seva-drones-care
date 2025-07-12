@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Drone, ArrowLeft, MapPin, Calendar, Leaf, User } from 'lucide-react';
+import { Plane, ArrowLeft, MapPin, Calendar, Leaf, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -86,7 +86,7 @@ const Booking = () => {
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 flex items-center justify-center p-4">
         <Card className="max-w-md mx-auto text-center">
           <CardContent className="p-8">
-            <Drone className="h-16 w-16 text-green-600 mx-auto mb-4" />
+            <Plane className="h-16 w-16 text-green-600 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-green-800 mb-4">Login Required</h2>
             <p className="text-green-600 mb-6">Please login to book our drone services</p>
             <div className="flex gap-4 justify-center">
@@ -133,7 +133,7 @@ const Booking = () => {
             <span>Back to Home</span>
           </Link>
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Drone className="h-8 w-8 text-green-600" />
+            <Plane className="h-8 w-8 text-green-600" />
             <h1 className="text-2xl font-bold text-green-800">Book Drone Service</h1>
           </div>
           <p className="text-green-600">డ్రోన్ సేవను బుక్ చేయండి</p>

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Drone, ArrowLeft, Mail, Lock } from 'lucide-react';
+import { Plane, ArrowLeft, Mail, Lock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
@@ -45,7 +45,7 @@ const Login = () => {
             <span>Back to Home</span>
           </Link>
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Drone className="h-8 w-8 text-green-600" />
+            <Plane className="h-8 w-8 text-green-600" />
             <h1 className="text-2xl font-bold text-green-800">AgriDrone Seva</h1>
           </div>
         </div>

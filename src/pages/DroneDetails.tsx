@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
-  Drone, 
+  Plane, 
   ArrowLeft, 
   CheckCircle, 
   Clock, 
@@ -75,7 +75,7 @@ const DroneDetails = () => {
             <span>Back to Home</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Drone className="h-8 w-8 text-green-600" />
+            <Plane className="h-8 w-8 text-green-600" />
             <h1 className="text-2xl font-bold text-green-800">AgriDrone Seva</h1>
           </div>
         </div>

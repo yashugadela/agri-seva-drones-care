@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Drone, Leaf, Clock, Shield, Users, ArrowRight } from 'lucide-react';
+import { Plane, Leaf, Clock, Shield, Users, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
@@ -15,7 +15,7 @@ const Index = () => {
       <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-green-100">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Drone className="h-8 w-8 text-green-600" />
+            <Plane className="h-8 w-8 text-green-600" />
             <h1 className="text-2xl font-bold text-green-800">AgriDrone Seva</h1>
           </div>
           <nav className="flex items-center gap-4">
@@ -151,7 +151,7 @@ const Index = () => {
       <footer className="bg-green-800 text-white py-8 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Drone className="h-6 w-6" />
+            <Plane className="h-6 w-6" />
             <span className="text-xl font-semibold">AgriDrone Seva</span>
           </div>
           <p className="text-green-200 mb-2">Smart Spraying for Smarter Farmers</p>
