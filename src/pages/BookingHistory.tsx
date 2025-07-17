@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { ArrowLeft, Calendar, MapPin, Plane, Bug } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Bug } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import droneMainImage from '@/assets/drone-main.png';
+import paddyFieldImage from '@/assets/paddy-field.jpg';
 
 interface Booking {
   id: string;
@@ -20,8 +22,10 @@ interface Booking {
   state: string;
   pincode: string;
   special_instructions?: string;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  status: string;
   created_at: string;
+  updated_at: string;
+  user_id: string;
 }
 
 const BookingHistory = () => {
@@ -36,46 +40,27 @@ const BookingHistory = () => {
       return;
     }
 
-    // Simulate loading bookings from Supabase
-    // In real implementation, this would be: supabase.from('bookings').select('*').eq('user_id', user.id)
-    const mockBookings: Booking[] = [
-      {
-        id: '1',
-        farmer_name: 'राम प्रसाद शर्मा',
-        phone: '+91 9876543210',
-        area_size: 5.5,
-        crop_type: 'Paddy/Rice',
-        preferred_date: '2024-01-15',
-        preferred_time: '08:00',
-        address: 'Village Rampur, Near Primary School',
-        city: 'Rampur',
-        state: 'Uttar Pradesh',
-        pincode: '244901',
-        status: 'confirmed',
-        created_at: '2024-01-10T10:30:00Z',
-        special_instructions: 'Please avoid spraying near the well area'
-      },
-      {
-        id: '2',
-        farmer_name: 'सुनीता देवी',
-        phone: '+91 8765432109',
-        area_size: 3.2,
-        crop_type: 'Wheat',
-        preferred_date: '2024-01-20',
-        preferred_time: '06:30',
-        address: 'Khet No. 45, Sector B',
-        city: 'Moradabad',
-        state: 'Uttar Pradesh',
-        pincode: '244001',
-        status: 'pending',
-        created_at: '2024-01-12T14:20:00Z'
-      }
-    ];
+    const fetchBookings = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('bookings')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
 
-    setTimeout(() => {
-      setBookings(mockBookings);
-      setLoading(false);
-    }, 1000);
+        if (error) {
+          console.error('Error fetching bookings:', error);
+        } else {
+          setBookings(data || []);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
   }, [user, navigate]);
 
   const getStatusColor = (status: string) => {
@@ -111,11 +96,12 @@ const BookingHistory = () => {
     <div 
       className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100"
       style={{
-        backgroundImage: `url(${droneMainImage})`,
-        backgroundSize: '200px',
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'bottom right',
-        backgroundAttachment: 'fixed',
+        backgroundImage: `url(${paddyFieldImage}), url(${droneMainImage})`,
+        backgroundSize: 'cover, 200px',
+        backgroundRepeat: 'no-repeat, no-repeat',
+        backgroundPosition: 'center, bottom right',
+        backgroundAttachment: 'fixed, fixed',
+        backgroundBlendMode: 'overlay, normal',
         opacity: 0.95
       }}
     >

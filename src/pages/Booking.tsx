@@ -10,6 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Bug, ArrowLeft, MapPin, Calendar, Leaf, User } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import paddyFieldImage from '@/assets/paddy-field.jpg';
+import wheatFieldImage from '@/assets/wheat-field.jpg';
+import sugarcaneFieldImage from '@/assets/sugarcane-field.jpg';
 
 const Booking = () => {
   const { user } = useAuth();
@@ -17,13 +21,17 @@ const Booking = () => {
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
-    district: '',
+    farmerName: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
     pincode: '',
-    acres: '',
+    areaSize: '',
     cropType: '',
     preferredDate: '',
     preferredTime: '',
-    additionalNotes: ''
+    specialInstructions: ''
   });
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,21 +55,37 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      // Simulate API call - replace with actual backend integration
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Store booking data temporarily (replace with backend call)
-      const bookingData = {
-        ...formData,
-        userId: user?.id,
-        userName: user?.name,
-        userEmail: user?.email,
-        userPhone: user?.phone,
-        bookingDate: new Date().toISOString(),
-        status: 'pending'
-      };
-      
-      localStorage.setItem('current-booking', JSON.stringify(bookingData));
+      if (!user) {
+        throw new Error('User not authenticated');
+      }
+
+      // Save booking to Supabase
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert([
+          {
+            user_id: user.id,
+            farmer_name: formData.farmerName,
+            phone: formData.phone,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            pincode: formData.pincode,
+            area_size: parseFloat(formData.areaSize),
+            crop_type: formData.cropType,
+            preferred_date: formData.preferredDate,
+            preferred_time: formData.preferredTime,
+            special_instructions: formData.specialInstructions,
+            status: 'pending'
+          }
+        ])
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      localStorage.setItem('current-booking', JSON.stringify(data[0]));
       
       toast({
         title: "Booking Submitted Successfully!",
@@ -70,6 +94,7 @@ const Booking = () => {
       
       navigate('/confirmation');
     } catch (error) {
+      console.error('Booking error:', error);
       toast({
         title: "Booking Failed",
         description: "Please try again later.",
@@ -124,7 +149,16 @@ const Booking = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-8 px-4">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-8 px-4"
+      style={{
+        backgroundImage: `url(${paddyFieldImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
       <div className="container mx-auto max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
@@ -157,43 +191,110 @@ const Booking = () => {
                   Location Details / స్థాన వివరాలు
                 </h3>
                 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="district" className="text-green-700">
-                      District / జిల్లా *
-                    </Label>
-                    <Select onValueChange={(value) => handleSelectChange('district', value)} required>
-                      <SelectTrigger className="border-green-200 focus:border-green-500">
-                        <SelectValue placeholder="Select your district" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {districts.map((district) => (
-                          <SelectItem key={district} value={district}>
-                            {district}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                 <div className="grid md:grid-cols-2 gap-4">
+                   <div className="space-y-2">
+                     <Label htmlFor="farmerName" className="text-green-700">
+                       Farmer Name / రైతు పేరు *
+                     </Label>
+                     <Input
+                       id="farmerName"
+                       name="farmerName"
+                       type="text"
+                       value={formData.farmerName}
+                       onChange={handleInputChange}
+                       placeholder="Enter farmer name"
+                       required
+                       className="border-green-200 focus:border-green-500"
+                     />
+                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="pincode" className="text-green-700">
-                      Pincode / పిన్‌కోడ్ *
-                    </Label>
-                    <Input
-                      id="pincode"
-                      name="pincode"
-                      type="text"
-                      value={formData.pincode}
-                      onChange={handleInputChange}
-                      placeholder="Enter pincode"
-                      required
-                      className="border-green-200 focus:border-green-500"
-                      pattern="[0-9]{6}"
-                      maxLength={6}
-                    />
-                  </div>
-                </div>
+                   <div className="space-y-2">
+                     <Label htmlFor="phone" className="text-green-700">
+                       Phone Number / ఫోన్ నంబర్ *
+                     </Label>
+                     <Input
+                       id="phone"
+                       name="phone"
+                       type="tel"
+                       value={formData.phone}
+                       onChange={handleInputChange}
+                       placeholder="Enter phone number"
+                       required
+                       className="border-green-200 focus:border-green-500"
+                       pattern="[0-9]{10}"
+                       maxLength={10}
+                     />
+                   </div>
+                 </div>
+
+                 <div className="space-y-2">
+                   <Label htmlFor="address" className="text-green-700">
+                     Address / చిరునామా *
+                   </Label>
+                   <Input
+                     id="address"
+                     name="address"
+                     type="text"
+                     value={formData.address}
+                     onChange={handleInputChange}
+                     placeholder="Enter complete address"
+                     required
+                     className="border-green-200 focus:border-green-500"
+                   />
+                 </div>
+
+                 <div className="grid md:grid-cols-3 gap-4">
+                   <div className="space-y-2">
+                     <Label htmlFor="city" className="text-green-700">
+                       City / నగరం *
+                     </Label>
+                     <Input
+                       id="city"
+                       name="city"
+                       type="text"
+                       value={formData.city}
+                       onChange={handleInputChange}
+                       placeholder="Enter city"
+                       required
+                       className="border-green-200 focus:border-green-500"
+                     />
+                   </div>
+
+                   <div className="space-y-2">
+                     <Label htmlFor="state" className="text-green-700">
+                       State / రాష్ట్రం *
+                     </Label>
+                     <Select onValueChange={(value) => handleSelectChange('state', value)} required>
+                       <SelectTrigger className="border-green-200 focus:border-green-500">
+                         <SelectValue placeholder="Select state" />
+                       </SelectTrigger>
+                       <SelectContent>
+                         <SelectItem value="Andhra Pradesh">Andhra Pradesh</SelectItem>
+                         <SelectItem value="Telangana">Telangana</SelectItem>
+                         <SelectItem value="Karnataka">Karnataka</SelectItem>
+                         <SelectItem value="Tamil Nadu">Tamil Nadu</SelectItem>
+                       </SelectContent>
+                     </Select>
+                   </div>
+
+                   <div className="space-y-2">
+                     <Label htmlFor="pincode" className="text-green-700">
+                       Pincode / పిన్‌కోడ్ *
+                     </Label>
+                     <Input
+                       id="pincode"
+                       name="pincode"
+                       type="text"
+                       value={formData.pincode}
+                       onChange={handleInputChange}
+                       placeholder="Enter pincode"
+                       required
+                       className="border-green-200 focus:border-green-500"
+                       pattern="[0-9]{6}"
+                       maxLength={6}
+                     />
+                   </div>
+                 </div>
               </div>
 
               {/* Farm Details */}
@@ -203,43 +304,71 @@ const Booking = () => {
                   Farm Details / వ్యవసాయ వివరాలు
                 </h3>
                 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="acres" className="text-green-700">
-                      Land Area (Acres) / భూమి వైశాల్యం (ఎకరాలు) *
-                    </Label>
-                    <Input
-                      id="acres"
-                      name="acres"
-                      type="number"
-                      value={formData.acres}
-                      onChange={handleInputChange}
-                      placeholder="Enter land area"
-                      required
-                      min="0.1"
-                      step="0.1"
-                      className="border-green-200 focus:border-green-500"
-                    />
-                  </div>
+                 <div className="grid md:grid-cols-2 gap-4">
+                   <div className="space-y-2">
+                     <Label htmlFor="areaSize" className="text-green-700">
+                       Land Area (Acres) / భూమి వైశాల్యం (ఎకరాలు) *
+                     </Label>
+                     <Input
+                       id="areaSize"
+                       name="areaSize"
+                       type="number"
+                       value={formData.areaSize}
+                       onChange={handleInputChange}
+                       placeholder="Enter land area"
+                       required
+                       min="0.1"
+                       step="0.1"
+                       className="border-green-200 focus:border-green-500"
+                     />
+                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="cropType" className="text-green-700">
-                      Crop Type / పంట రకం
-                    </Label>
-                    <Select onValueChange={(value) => handleSelectChange('cropType', value)}>
-                      <SelectTrigger className="border-green-200 focus:border-green-500">
-                        <SelectValue placeholder="Select crop type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {cropTypes.map((crop) => (
-                          <SelectItem key={crop} value={crop}>
-                            {crop}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
+                   <div className="space-y-2">
+                     <Label htmlFor="cropType" className="text-green-700">
+                       Crop Type / పంట రకం *
+                     </Label>
+                     <Select onValueChange={(value) => handleSelectChange('cropType', value)} required>
+                       <SelectTrigger className="border-green-200 focus:border-green-500">
+                         <SelectValue placeholder="Select crop type" />
+                       </SelectTrigger>
+                       <SelectContent>
+                         {cropTypes.map((crop) => (
+                           <SelectItem key={crop} value={crop}>
+                             {crop}
+                           </SelectItem>
+                         ))}
+                       </SelectContent>
+                     </Select>
+                   </div>
+                 </div>
+
+                 {/* Crop Type Images */}
+                 <div className="grid grid-cols-3 gap-4 mt-4">
+                   <div className="text-center">
+                     <img 
+                       src={paddyFieldImage} 
+                       alt="Paddy Field" 
+                       className="w-full h-20 object-cover rounded-lg border-2 border-green-200"
+                     />
+                     <p className="text-xs text-green-600 mt-1">Paddy/Rice</p>
+                   </div>
+                   <div className="text-center">
+                     <img 
+                       src={wheatFieldImage} 
+                       alt="Wheat Field" 
+                       className="w-full h-20 object-cover rounded-lg border-2 border-green-200"
+                     />
+                     <p className="text-xs text-green-600 mt-1">Wheat</p>
+                   </div>
+                   <div className="text-center">
+                     <img 
+                       src={sugarcaneFieldImage} 
+                       alt="Sugarcane Field" 
+                       className="w-full h-20 object-cover rounded-lg border-2 border-green-200"
+                     />
+                     <p className="text-xs text-green-600 mt-1">Sugarcane</p>
+                   </div>
+                 </div>
               </div>
 
               {/* Schedule Details */}
@@ -288,13 +417,13 @@ const Booking = () => {
 
               {/* Additional Notes */}
               <div className="space-y-2">
-                <Label htmlFor="additionalNotes" className="text-green-700">
-                  Additional Notes / అదనపు గమనికలు
+                <Label htmlFor="specialInstructions" className="text-green-700">
+                  Special Instructions / ప్రత్యేక సూచనలు
                 </Label>
                 <Textarea
-                  id="additionalNotes"
-                  name="additionalNotes"
-                  value={formData.additionalNotes}
+                  id="specialInstructions"
+                  name="specialInstructions"
+                  value={formData.specialInstructions}
                   onChange={handleInputChange}
                   placeholder="Any specific requirements or notes..."
                   className="border-green-200 focus:border-green-500"
