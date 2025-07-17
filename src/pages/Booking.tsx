@@ -202,7 +202,7 @@ const Booking = () => {
                        type="text"
                        value={formData.farmerName}
                        onChange={handleInputChange}
-                       placeholder="Enter farmer name"
+                       placeholder="Enter farmer name / రైతు పేరు నమోదు చేయండి"
                        required
                        className="border-green-200 focus:border-green-500"
                      />
@@ -218,7 +218,7 @@ const Booking = () => {
                        type="tel"
                        value={formData.phone}
                        onChange={handleInputChange}
-                       placeholder="Enter phone number"
+                       placeholder="Enter phone number / ఫోన్ నంబర్ నమోదు చేయండి"
                        required
                        className="border-green-200 focus:border-green-500"
                        pattern="[0-9]{10}"
@@ -237,7 +237,7 @@ const Booking = () => {
                      type="text"
                      value={formData.address}
                      onChange={handleInputChange}
-                     placeholder="Enter complete address"
+                     placeholder="Enter complete address / పూర్తి చిరునామా నమోదు చేయండి"
                      required
                      className="border-green-200 focus:border-green-500"
                    />
@@ -254,7 +254,7 @@ const Booking = () => {
                        type="text"
                        value={formData.city}
                        onChange={handleInputChange}
-                       placeholder="Enter city"
+                       placeholder="Enter city / నగరం నమోదు చేయండి"
                        required
                        className="border-green-200 focus:border-green-500"
                      />
@@ -266,7 +266,7 @@ const Booking = () => {
                      </Label>
                      <Select onValueChange={(value) => handleSelectChange('state', value)} required>
                        <SelectTrigger className="border-green-200 focus:border-green-500">
-                         <SelectValue placeholder="Select state" />
+                         <SelectValue placeholder="Select state / రాష్ట్రం ఎంచుకోండి" />
                        </SelectTrigger>
                        <SelectContent>
                          <SelectItem value="Andhra Pradesh">Andhra Pradesh</SelectItem>
@@ -287,7 +287,7 @@ const Booking = () => {
                        type="text"
                        value={formData.pincode}
                        onChange={handleInputChange}
-                       placeholder="Enter pincode"
+                       placeholder="Enter pincode / పిన్‌కోడ్ నమోదు చేయండి"
                        required
                        className="border-green-200 focus:border-green-500"
                        pattern="[0-9]{6}"
@@ -315,7 +315,7 @@ const Booking = () => {
                        type="number"
                        value={formData.areaSize}
                        onChange={handleInputChange}
-                       placeholder="Enter land area"
+                       placeholder="Enter land area / భూమి వైశాల్యం నమోదు చేయండి"
                        required
                        min="0.1"
                        step="0.1"
@@ -329,7 +329,7 @@ const Booking = () => {
                      </Label>
                      <Select onValueChange={(value) => handleSelectChange('cropType', value)} required>
                        <SelectTrigger className="border-green-200 focus:border-green-500">
-                         <SelectValue placeholder="Select crop type" />
+                         <SelectValue placeholder="Select crop type / పంట రకం ఎంచుకోండి" />
                        </SelectTrigger>
                        <SelectContent>
                          {cropTypes.map((crop) => (
@@ -399,10 +399,10 @@ const Booking = () => {
                     <Label htmlFor="preferredTime" className="text-green-700">
                       Preferred Time / ప్రాధాన్య సమయం *
                     </Label>
-                    <Select onValueChange={(value) => handleSelectChange('preferredTime', value)} required>
-                      <SelectTrigger className="border-green-200 focus:border-green-500">
-                        <SelectValue placeholder="Select time slot" />
-                      </SelectTrigger>
+                     <Select onValueChange={(value) => handleSelectChange('preferredTime', value)} required>
+                       <SelectTrigger className="border-green-200 focus:border-green-500">
+                         <SelectValue placeholder="Select time slot / సమయ స్లాట్ ఎంచుకోండి" />
+                       </SelectTrigger>
                       <SelectContent>
                         {timeSlots.map((slot) => (
                           <SelectItem key={slot} value={slot}>
@@ -425,7 +425,7 @@ const Booking = () => {
                   name="specialInstructions"
                   value={formData.specialInstructions}
                   onChange={handleInputChange}
-                  placeholder="Any specific requirements or notes..."
+                  placeholder="Any specific requirements or notes / ఏవైనా ప్రత్యేక అవసరాలు లేదా గమనికలు..."
                   className="border-green-200 focus:border-green-500"
                   rows={3}
                 />

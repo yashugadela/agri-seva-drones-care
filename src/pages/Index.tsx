@@ -3,8 +3,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Bug, Leaf, Clock, Shield, Users, ArrowRight, LogOut, History } from 'lucide-react';
+import { Bug, Leaf, Clock, Shield, Users, ArrowRight, LogOut, History, Phone, Mail, MapPin } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import farmLandscapeImage from '@/assets/farm-landscape.jpg';
 
 const Index = () => {
   const { user, logout } = useAuth();
@@ -14,7 +15,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50"
+      style={{
+        backgroundImage: `url(${farmLandscapeImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundBlendMode: 'overlay'
+      }}
+    >
       {/* Header */}
       <header className="bg-white/90 backdrop-blur-sm shadow-sm border-b border-green-100">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -163,6 +173,48 @@ const Index = () => {
               </Button>
             </Link>
           )}
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="py-16 px-4 bg-white/90 backdrop-blur-sm">
+        <div className="container mx-auto">
+          <h3 className="text-3xl font-bold text-green-800 text-center mb-12">
+            Contact Us / సంప్రదించండి
+          </h3>
+          <div className="max-w-2xl mx-auto">
+            <Card className="bg-white/80 backdrop-blur-sm border-green-200">
+              <CardContent className="p-8">
+                <div className="text-center mb-8">
+                  <h4 className="text-2xl font-bold text-green-800 mb-2">D Sunil Kumar</h4>
+                  <p className="text-green-600">AgriDrone Service Provider</p>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+                    <Phone className="h-6 w-6 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-green-800">Phone / ఫోన్</p>
+                      <p className="text-green-600">8237605148</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+                    <Mail className="h-6 w-6 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-green-800">Email / ఇమెయిల్</p>
+                      <p className="text-green-600">yashugadela@gmail.com</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+                    <MapPin className="h-6 w-6 text-green-600" />
+                    <div>
+                      <p className="font-semibold text-green-800">Service Area / సేవా ప్రాంతం</p>
+                      <p className="text-green-600">Andhra Pradesh & Telangana</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
 
