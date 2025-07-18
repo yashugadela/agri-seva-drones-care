@@ -97,10 +97,11 @@ const Booking = () => {
       
       toast({
         title: "Booking Submitted Successfully!",
-        description: "మీ బుకింగ్ విజయవంతంగా పూర్తయింది!",
+        description: "మీ బుకింగ్ విజయవంతంగా పూర్తయింది! Check your booking history.",
       });
       
-      navigate('/confirmation');
+      // Redirect to booking history to see the new booking
+      navigate('/booking-history');
     } catch (error: any) {
       console.error('Booking error:', error);
       toast({
