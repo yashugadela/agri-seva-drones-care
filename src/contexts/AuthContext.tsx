@@ -1,7 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { User as SupabaseUser, Session } from '@supabase/supabase-js';
 
 interface User {
   id: string;
@@ -30,58 +28,32 @@ export const useAuth = () => {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        if (session?.user) {
-          const userData: User = {
-            id: session.user.id,
-            name: session.user.user_metadata?.name || 'Farmer User',
-            email: session.user.email || '',
-            phone: session.user.user_metadata?.phone || '+91 9876543210'
-          };
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
-        setIsLoading(false);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session?.user) {
-        const userData: User = {
-          id: session.user.id,
-          name: session.user.user_metadata?.name || 'Farmer User',
-          email: session.user.email || '',
-          phone: session.user.user_metadata?.phone || '+91 9876543210'
-        };
-        setUser(userData);
-      }
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    // Check for stored user data on app load
+    const storedUser = localStorage.getItem('agri-drone-user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      // Simulate API call - replace with actual backend integration
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const userData: User = {
+        id: '1',
+        name: 'Farmer User',
         email,
-        password,
-      });
-
-      if (error) {
-        throw error;
-      }
+        phone: '+91 9876543210'
+      };
+      
+      setUser(userData);
+      localStorage.setItem('agri-drone-user', JSON.stringify(userData));
     } catch (error) {
       throw new Error('Login failed');
     } finally {
@@ -92,23 +64,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = async (name: string, email: string, phone: string, password: string) => {
     setIsLoading(true);
     try {
-      const redirectUrl = `${window.location.origin}/`;
+      // Simulate API call - replace with actual backend integration
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const { data, error } = await supabase.auth.signUp({
+      const userData: User = {
+        id: '1',
+        name,
         email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            name,
-            phone
-          }
-        }
-      });
-
-      if (error) {
-        throw error;
-      }
+        phone
+      };
+      
+      setUser(userData);
+      localStorage.setItem('agri-drone-user', JSON.stringify(userData));
     } catch (error) {
       throw new Error('Registration failed');
     } finally {
@@ -118,9 +85,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     try {
-      await supabase.auth.signOut();
+      // If using Supabase auth in future, call supabase.auth.signOut()
       setUser(null);
-      setSession(null);
+      localStorage.removeItem('agri-drone-user');
     } catch (error) {
       console.error('Logout error:', error);
     }

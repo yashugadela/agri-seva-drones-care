@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Bug, ArrowLeft, Plus, Phone, MapPin, Calendar, Clock, Leaf, Crop } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
+import { ArrowLeft, Calendar, MapPin, Plane, Bug } from 'lucide-react';
+import droneMainImage from '@/assets/drone-main.png';
 
 interface Booking {
   id: string;
   farmer_name: string;
   phone: string;
-  address: string;
-  city: string;
-  state: string;
-  pincode: string;
   area_size: number;
   crop_type: string;
   preferred_date: string;
   preferred_time: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
   special_instructions?: string;
-  status: string;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
   created_at: string;
-  updated_at: string;
 }
 
 const BookingHistory = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -36,41 +36,60 @@ const BookingHistory = () => {
       return;
     }
 
-    const fetchBookings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('bookings')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Error fetching bookings:', error);
-        } else {
-          setBookings(data || []);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        setLoading(false);
+    // Simulate loading bookings from Supabase
+    // In real implementation, this would be: supabase.from('bookings').select('*').eq('user_id', user.id)
+    const mockBookings: Booking[] = [
+      {
+        id: '1',
+        farmer_name: 'राम प्रसाद शर्मा',
+        phone: '+91 9876543210',
+        area_size: 5.5,
+        crop_type: 'Paddy/Rice',
+        preferred_date: '2024-01-15',
+        preferred_time: '08:00',
+        address: 'Village Rampur, Near Primary School',
+        city: 'Rampur',
+        state: 'Uttar Pradesh',
+        pincode: '244901',
+        status: 'confirmed',
+        created_at: '2024-01-10T10:30:00Z',
+        special_instructions: 'Please avoid spraying near the well area'
+      },
+      {
+        id: '2',
+        farmer_name: 'सुनीता देवी',
+        phone: '+91 8765432109',
+        area_size: 3.2,
+        crop_type: 'Wheat',
+        preferred_date: '2024-01-20',
+        preferred_time: '06:30',
+        address: 'Khet No. 45, Sector B',
+        city: 'Moradabad',
+        state: 'Uttar Pradesh',
+        pincode: '244001',
+        status: 'pending',
+        created_at: '2024-01-12T14:20:00Z'
       }
-    };
+    ];
 
-    fetchBookings();
+    setTimeout(() => {
+      setBookings(mockBookings);
+      setLoading(false);
+    }, 1000);
   }, [user, navigate]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'confirmed': return 'bg-green-100 text-green-800 border-green-200';
-      case 'completed': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'cancelled': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'confirmed': return 'bg-green-100 text-green-800';
+      case 'completed': return 'bg-blue-100 text-blue-800';
+      case 'pending': return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
+    return new Date(dateString).toLocaleDateString('hi-IN', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -79,165 +98,141 @@ const BookingHistory = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 flex items-center justify-center">
-        <Card className="p-8 shadow-lg">
-          <div className="text-center">
-            <Bug className="h-12 w-12 text-primary mx-auto mb-4 animate-spin" />
-            <p className="text-foreground">Loading your bookings... / మీ బుకింగ్‌లను లోడ్ చేస్తోంది...</p>
-          </div>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100 flex items-center justify-center">
+        <div className="text-center">
+          <Bug className="w-12 h-12 text-green-600 animate-spin mx-auto mb-4" />
+          <p className="text-green-700">Loading your bookings...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-lime-50 py-8 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div 
+      className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-100"
+      style={{
+        backgroundImage: `url(${droneMainImage})`,
+        backgroundSize: '200px',
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'bottom right',
+        backgroundAttachment: 'fixed',
+        opacity: 0.95
+      }}
+    >
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-4">
-            <ArrowLeft className="h-5 w-5" />
-            <span>Back to Home / హోమ్‌కు తిరిగి</span>
-          </Link>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Bug className="h-8 w-8 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">My Bookings / నా బుకింగ్‌లు</h1>
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Home
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-green-800">Booking History</h1>
+              <p className="text-green-600">Your drone service bookings</p>
+            </div>
           </div>
-          <p className="text-muted-foreground">Track your drone service requests / మీ డ్రోన్ సేవా అభ్యర్థనలను ట్రాక్ చేయండి</p>
+          
+          <Button 
+            onClick={() => navigate('/booking')}
+            className="bg-green-600 hover:bg-green-700 text-white"
+          >
+            <Bug className="w-4 h-4 mr-2" />
+            New Booking
+          </Button>
         </div>
 
+        {/* Bookings List */}
         {bookings.length === 0 ? (
-          <Card className="text-center p-12 shadow-lg">
+          <Card className="text-center py-12">
             <CardContent>
-              <Bug className="h-16 w-16 text-muted-foreground mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-foreground mb-4">No Bookings Yet / ఇంకా బుకింగ్‌లు లేవు</h2>
-              <p className="text-muted-foreground mb-8">
-                You haven't made any drone service bookings yet. Start by booking your first service!
-                <br />
-                మీరు ఇంకా ఎలాంటి డ్రోన్ సేవ బుకింగ్‌లు చేయలేదు. మీ మొదటి సేవను బుక్ చేయడం ప్రారంభించండి!
-              </p>
-              <Link to="/booking">
-                <Button className="bg-primary hover:bg-primary/90 text-white px-8 py-3">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Book Your First Service / మీ మొదటి సేవను బుక్ చేయండి
-                </Button>
-              </Link>
+              <Bug className="w-16 h-16 text-green-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-700 mb-2">No Bookings Yet</h3>
+              <p className="text-gray-500 mb-6">You haven't made any drone service bookings yet.</p>
+              <Button 
+                onClick={() => navigate('/booking')}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                Make Your First Booking
+              </Button>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-6">
             {bookings.map((booking) => (
-              <Card key={booking.id} className="hover-lift border-primary/20 shadow-lg">
-                <CardContent className="p-6">
-                  <div className="flex flex-col space-y-4">
-                    {/* Header with Status */}
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-xl font-bold text-foreground">{booking.farmer_name}</h3>
-                        <p className="text-sm text-muted-foreground">Request ID: {booking.id.slice(0, 8)}</p>
+              <Card key={booking.id} className="hover:shadow-lg transition-shadow">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-xl text-green-800">
+                      Booking #{booking.id.slice(0, 8)}
+                    </CardTitle>
+                    <Badge className={getStatusColor(booking.status)}>
+                      {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {/* Farmer Details */}
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-green-700 flex items-center gap-2">
+                        <Bug className="w-4 h-4" />
+                        Farmer Details
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="font-medium">Name:</span> {booking.farmer_name}</p>
+                        <p><span className="font-medium">Phone:</span> {booking.phone}</p>
+                        <p><span className="font-medium">Crop:</span> {booking.crop_type}</p>
+                        <p><span className="font-medium">Area:</span> {booking.area_size} acres</p>
                       </div>
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(booking.status)}`}>
-                        {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                      </span>
                     </div>
 
-                    {/* Booking Details Grid */}
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-3">
-                          <Phone className="h-4 w-4 text-primary" />
+                    {/* Schedule & Location */}
+                    <div className="space-y-3">
+                      <h4 className="font-semibold text-green-700 flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        Schedule & Location
+                      </h4>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="font-medium">Date:</span> {formatDate(booking.preferred_date)}</p>
+                        <p><span className="font-medium">Time:</span> {booking.preferred_time}</p>
+                        <div className="flex items-start gap-2">
+                          <MapPin className="w-4 h-4 mt-0.5 text-green-600" />
                           <div>
-                            <p className="text-sm text-muted-foreground">Phone / ఫోన్</p>
-                            <p className="font-medium text-foreground">{booking.phone}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center space-x-3">
-                          <MapPin className="h-4 w-4 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Location / ప్రాంతం</p>
-                            <p className="font-medium text-foreground">{booking.city}, {booking.state}</p>
-                            <p className="text-sm text-muted-foreground">{booking.address}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                          <Leaf className="h-4 w-4 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Crop Type / పంట రకం</p>
-                            <p className="font-medium text-foreground">{booking.crop_type}</p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="space-y-3">
-                        <div className="flex items-center space-x-3">
-                          <Calendar className="h-4 w-4 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Scheduled Date & Time / తేదీ మరియు సమయం</p>
-                            <p className="font-medium text-foreground">{formatDate(booking.preferred_date)}</p>
-                            <p className="text-sm text-primary">{booking.preferred_time}</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                          <Crop className="h-4 w-4 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Area Size / ప్రాంత పరిమాణం</p>
-                            <p className="font-medium text-foreground">{booking.area_size} acres</p>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                          <Clock className="h-4 w-4 text-primary" />
-                          <div>
-                            <p className="text-sm text-muted-foreground">Request Date / అభ్యర్థన తేదీ</p>
-                            <p className="font-medium text-foreground">{formatDate(booking.created_at)}</p>
+                            <p>{booking.address}</p>
+                            <p>{booking.city}, {booking.state} - {booking.pincode}</p>
                           </div>
                         </div>
                       </div>
                     </div>
+                  </div>
 
-                    {/* Special Instructions */}
-                    {booking.special_instructions && (
-                      <div className="mt-4 p-3 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground mb-1">Special Instructions / ప్రత్యేక సూచనలు</p>
-                        <p className="text-foreground">{booking.special_instructions}</p>
-                      </div>
-                    )}
-
-                    {/* Footer with estimated cost */}
-                    <div className="flex justify-between items-center pt-4 border-t border-muted">
-                      <div>
-                        <p className="text-sm text-muted-foreground">Estimated Cost / అంచనా ధర</p>
-                        <p className="text-lg font-bold text-primary">₹{(booking.area_size * 500).toLocaleString()}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xs text-muted-foreground">PIN: {booking.pincode}</p>
-                      </div>
+                  {/* Special Instructions */}
+                  {booking.special_instructions && (
+                    <div className="pt-4 border-t border-green-100">
+                      <h4 className="font-semibold text-green-700 mb-2">Special Instructions</h4>
+                      <p className="text-sm text-gray-600 bg-green-50 p-3 rounded-lg">
+                        {booking.special_instructions}
+                      </p>
                     </div>
+                  )}
+
+                  {/* Booking Date */}
+                  <div className="pt-2 border-t border-green-100">
+                    <p className="text-xs text-gray-500">
+                      Booked on: {formatDate(booking.created_at)}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         )}
-
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home / హోమ్‌కు తిరిగి
-            </Button>
-          </Link>
-          <Link to="/booking">
-            <Button className="bg-primary hover:bg-primary/90 text-white">
-              <Plus className="w-4 h-4 mr-2" />
-              New Booking / కొత్త బుకింగ్
-            </Button>
-          </Link>
-        </div>
       </div>
     </div>
   );
