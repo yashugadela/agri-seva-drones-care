@@ -59,6 +59,13 @@ const Booking = () => {
         throw new Error('User not authenticated');
       }
 
+      // Validate required fields
+      if (!formData.farmerName || !formData.phone || !formData.address || !formData.city || 
+          !formData.state || !formData.pincode || !formData.areaSize || !formData.cropType || 
+          !formData.preferredDate || !formData.preferredTime) {
+        throw new Error('Please fill in all required fields');
+      }
+
       // Save booking to Supabase
       const { data, error } = await supabase
         .from('bookings')
@@ -75,14 +82,15 @@ const Booking = () => {
             crop_type: formData.cropType,
             preferred_date: formData.preferredDate,
             preferred_time: formData.preferredTime,
-            special_instructions: formData.specialInstructions,
+            special_instructions: formData.specialInstructions || null,
             status: 'pending'
           }
         ])
         .select();
 
       if (error) {
-        throw error;
+        console.error('Supabase error:', error);
+        throw new Error(`Booking failed: ${error.message}`);
       }
 
       localStorage.setItem('current-booking', JSON.stringify(data[0]));
@@ -93,11 +101,11 @@ const Booking = () => {
       });
       
       navigate('/confirmation');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Booking error:', error);
       toast({
-        title: "Booking Failed",
-        description: "Please try again later.",
+        title: "Booking Failed / బుకింగ్ విఫలమైంది",
+        description: error.message || "Please try again later. / దయచేసి తర్వాత మళ్లీ ప్రయత్నించండి.",
         variant: "destructive",
       });
     } finally {
